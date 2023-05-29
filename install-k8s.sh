@@ -73,67 +73,6 @@ if [ "`grep "ip_vs" /etc/modules`" != "" ]; then
   ls /lib/modules/$(uname -r)/kernel/net/netfilter/ipvs|grep -o "^[^.]*" >> /etc/modules
 fi
 
-echo 配置containerd
-
-# if [ ! -f "cri-containerd-cni-1.6.16-linux-amd64.tar.gz" ]; then
-#   echo "start download cri-containerd-cni-1.6.16-linux-amd64.tar.gz from github"
-#   wget -t 0 -T 300 https://github.com/containerd/containerd/releases/download/v1.6.16/cri-containerd-cni-1.6.16-linux-amd64.tar.gz -O cri-containerd-cni-1.6.16-linux-amd64.tar.gz
-#   if [ `ls -l | grep "cri-containerd-cni-1.6.16-linux-amd64.tar.gz" | grep -v grep | awk -F " " '{print $5}'` -gt 120847122 ]; then
-#     echo 'download finsh from github'
-#   else
-#     echo "download failure from github, need wget https://www.qiushaocloud.top/common-static/k8s-files/cri-containerd-cni-1.6.16-linux-amd64.tar.gz"
-#     wget -t 3 -T 300 https://www.qiushaocloud.top/common-static/k8s-files/cri-containerd-cni-1.6.16-linux-amd64.tar.gz -O cri-containerd-cni-1.6.16-linux-amd64.tar.gz
-
-#     if [ `ls -l | grep "cri-containerd-cni-1.6.16-linux-amd64.tar.gz" | grep -v grep | awk -F " " '{print $5}'` -gt 120847122 ]; then
-#       echo "download cri-containerd-cni-1.6.16-linux-amd64.tar.gz file success"
-#     else
-#       echo "download cri-containerd-cni-1.6.16-linux-amd64.tar.gz file failure, need remove file, ls -l:"`ls -l`
-#       rm -rf cri-containerd-cni-1.6.16-linux-amd64.tar.gz
-#     fi
-#   fi
-
-#   echo "file download finsh, ls -l:"`ls -l`
-# else
-#   echo "exit cri-containerd-cni-1.6.16-linux-amd64.tar.gz file"
-# fi
-
-# echo cri-containerd-cni-1.6.16-linux-amd64.tar.gz 解压到根目录
-# tar -xvf cri-containerd-cni-1.6.16-linux-amd64.tar.gz -C /
-
-# echo 修改containerd的配置，将sandox_image镜像源设置为阿里云google_containers镜像源
-# mkdir /etc/containerd/
-# echo 产生containerd默认配置文件
-# containerd config default > /etc/containerd/config.toml
-
-# echo 改变sandbox_image
-# grep sandbox_image /etc/containerd/config.toml
-# #sed -i "s#k8s.gcr.io/pause:3.5#registry.aliyuncs.com/google_containers/pause:3.9#g" /etc/containerd/config.toml
-# sed -i "s#k8s.gcr.io/pause#registry.aliyuncs.com/google_containers/pause#g" /etc/containerd/config.toml
-# #sed -i "s#registry.k8s.io/pause:3.6#registry.aliyuncs.com/google_containers/pause:3.9#g" /etc/containerd/config.toml
-# sed -i "s#registry.k8s.io/pause#registry.aliyuncs.com/google_containers/pause#g" /etc/containerd/config.toml
-
-# echo 镜像加速
-# sed -i '/\[plugins.\"io.containerd.grpc.v1.cri\".registry.mirrors.\"docker.io\"\]/d' /etc/containerd/config.toml
-# sed -i '/endpoint = \[\"https:\/\/registry.aliyuncs.com\"\]/d' /etc/containerd/config.toml
-# sed -i 's#\[plugins.\"io.containerd.grpc.v1.cri\".registry.mirrors\]#\[plugins.\"io.containerd.grpc.v1.cri\".registry.mirrors\]\n        \[plugins.\"io.containerd.grpc.v1.cri\".registry.mirrors.\"docker.io\"\]\n          endpoint = \[\"https:\/\/registry.aliyuncs.com\"\]#' /etc/containerd/config.toml
-
-# echo 配置containerd cgroup驱动程序systemd
-# sed -i 's#SystemdCgroup = false#SystemdCgroup = true#g' /etc/containerd/config.toml
-# grep SystemdCgroup /etc/containerd/config.toml
-
-# echo 重新daemon-reload，启用containerd
-# systemctl daemon-reload
-# #systemctl status containerd &
-# systemctl enable --now containerd
-# systemctl is-active containerd
-# systemctl restart containerd
-# #systemctl status containerd &
-
-# echo 安装CNI插件工具
-# tar -xvf cni-plugins-linux-amd64-v1.2.0.tgz -C /opt/cni/bin
-
-# echo "ctr version: `ctr version`"
-# echo "crictl version: `crictl version`"
 
 echo "------------------ add k8s source list ---------------------"
 apt-get update && apt-get install -y apt-transport-https ca-certificates curl
@@ -247,69 +186,6 @@ fi
 echo install libseccomp-2.5.1-1.el8.x86_64.rpm
 rpm -ivh libseccomp-2.5.1-1.el8.x86_64.rpm
 rpm -qa | grep libseccomp
-
-# echo 配置containerd
-
-# if [ ! -f "cri-containerd-cni-1.6.16-linux-amd64.tar.gz" ]; then
-#   echo "start download cri-containerd-cni-1.6.16-linux-amd64.tar.gz from github"
-#   wget https://github.com/containerd/containerd/releases/download/v1.6.16/cri-containerd-cni-1.6.16-linux-amd64.tar.gz -O cri-containerd-cni-1.6.16-linux-amd64.tar.gz
-#   if [ `ls -l | grep "cri-containerd-cni-1.6.16-linux-amd64.tar.gz" | grep -v grep | awk -F " " '{print $5}'` -gt 120847122 ]; then
-#     echo 'download finsh from github'
-#   else
-#     echo "download failure from github, need wget https://www.qiushaocloud.top/common-static/k8s-files/cri-containerd-cni-1.6.16-linux-amd64.tar.gz"
-#     wget https://www.qiushaocloud.top/common-static/k8s-files/cri-containerd-cni-1.6.16-linux-amd64.tar.gz -O cri-containerd-cni-1.6.16-linux-amd64.tar.gz
-
-#     if [ `ls -l | grep "cri-containerd-cni-1.6.16-linux-amd64.tar.gz" | grep -v grep | awk -F " " '{print $5}'` -gt 120847122 ]; then
-#       echo "download cri-containerd-cni-1.6.16-linux-amd64.tar.gz file success"
-#     else
-#       echo "download cri-containerd-cni-1.6.16-linux-amd64.tar.gz file failure, need remove file, ls -l:"`ls -l`
-#       rm -rf cri-containerd-cni-1.6.16-linux-amd64.tar.gz
-#     fi
-#   fi
-
-#   echo "file download finsh, ls -l:"`ls -l`
-# else
-#   echo "exit cri-containerd-cni-1.6.16-linux-amd64.tar.gz file"
-# fi
-
-# echo cri-containerd-cni-1.6.16-linux-amd64.tar.gz 解压到根目录
-# tar -xvf cri-containerd-cni-1.6.16-linux-amd64.tar.gz -C /
-
-# echo 修改containerd的配置，将sandox_image镜像源设置为阿里云google_containers镜像源
-# mkdir /etc/containerd/
-# echo 产生containerd默认配置文件
-# containerd config default > /etc/containerd/config.toml
-
-# echo 改变sandbox_image
-# grep sandbox_image /etc/containerd/config.toml
-# #sed -i "s#k8s.gcr.io/pause:3.5#registry.aliyuncs.com/google_containers/pause:3.9#g" /etc/containerd/config.toml
-# sed -i "s#k8s.gcr.io/pause#registry.aliyuncs.com/google_containers/pause#g" /etc/containerd/config.toml
-# #sed -i "s#registry.k8s.io/pause:3.6#registry.aliyuncs.com/google_containers/pause:3.9#g" /etc/containerd/config.toml
-# sed -i "s#registry.k8s.io/pause#registry.aliyuncs.com/google_containers/pause#g" /etc/containerd/config.toml
-
-
-# echo 镜像加速
-# sed -i '/\[plugins.\"io.containerd.grpc.v1.cri\".registry.mirrors.\"docker.io\"\]/d' /etc/containerd/config.toml
-# sed -i '/endpoint = \[\"https:\/\/registry.aliyuncs.com\"\]/d' /etc/containerd/config.toml
-# sed -i 's#\[plugins.\"io.containerd.grpc.v1.cri\".registry.mirrors\]#\[plugins.\"io.containerd.grpc.v1.cri\".registry.mirrors\]\n        \[plugins.\"io.containerd.grpc.v1.cri\".registry.mirrors.\"docker.io\"\]\n          endpoint = \[\"https:\/\/registry.aliyuncs.com\"\]#' /etc/containerd/config.toml
-
-# echo 配置containerd cgroup驱动程序systemd
-# sed -i 's#SystemdCgroup = false#SystemdCgroup = true#g' /etc/containerd/config.toml
-# grep SystemdCgroup /etc/containerd/config.toml
-
-# echo 重新daemon-reload，启用containerd
-# systemctl daemon-reload
-# #systemctl status containerd &
-# systemctl enable --now containerd
-# systemctl is-active containerd
-# systemctl restart containerd
-# #systemctl status containerd &
-
-# echo 安装CNI插件工具
-# tar -xvf cni-plugins-linux-amd64-v1.2.0.tgz -C /opt/cni/bin
-
-# echo "ctr version: `ctr version`"
-# echo "crictl version: `crictl version`"
 
 
 echo 安装 kubeadm、kubelet 和 kubectl

@@ -1,0 +1,10 @@
+/.idea
+.DS_Store
+.env
+.env.swp
+kubeadm-init.log
+kubeadm-config.yml
+calico.yaml
+metallb-configMap.yaml
+k8s-node-need-files.tgz
+k8s-node-join-info
