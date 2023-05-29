@@ -14,5 +14,5 @@ kubeadm config images pull --config kubeadm-config.yml
 
 # for i in $images_list
 # do
-#     crictl pull $i
+#     docker pull $i
 # done
