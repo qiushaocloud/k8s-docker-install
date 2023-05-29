@@ -47,14 +47,12 @@ EOF
 4. 查看 k8s node 节点加入的命令: `cat k8s-node-join-info`，得到的信息例如: 
 ``` shell
 kubeadm join 192.168.1.xx:6443 --token abcded.1234567890abcdef \
-    --discovery-token-ca-cert-hash sha256:36kiuydcf921ff6dhg6y5471857bfe9b529f6datrey0825ae1add79e7aefd1c2 \
-    --cri-socket unix:///var/run/docker.sock
+    --discovery-token-ca-cert-hash sha256:36kiuydcf921ff6dhg6y5471857bfe9b529f6datrey0825ae1add79e7aefd1c2
 ```
-5. 您也可以从 kubeadm-init.log 中获取 join k8s 命令(即: kubeadm join 部分)，node 节点需要用该命令加入 k8s【注意：kubeadm join 需要加上 --cri-socket unix:///var/run/docker.sock】, 例如: 
+5. 您也可以从 kubeadm-init.log 中获取 join k8s 命令(即: kubeadm join 部分)，node 节点需要用该命令加入 k8s, 例如: 
 ``` shell
 kubeadm join 192.168.1.xx:6443 --token abcded.1234567890abcdef \
-    --discovery-token-ca-cert-hash sha256:36kiuydcf921ff6dhg6y5471857bfe9b529f6datrey0825ae1add79e7aefd1c2 \
-    --cri-socket unix:///var/run/docker.sock
+    --discovery-token-ca-cert-hash sha256:36kiuydcf921ff6dhg6y5471857bfe9b529f6datrey0825ae1add79e7aefd1c2
 ```
 6. 因为重新设置 kube-apiserver 端口范围，服务会重启，需要等待一段时间，等服务重启完，把网络组件安装完就行了
 7. 等待一段时间后，执行命令查看 pod 是否都已经 Ready 了, 命令: `kubectl get pod -A`
@@ -65,11 +63,10 @@ kubeadm join 192.168.1.xx:6443 --token abcded.1234567890abcdef \
 1. 运行 `bash install-helm.sh`
 
 ### k8s node 节点加入集群
-1. 使用 k8s master 节点 init 完后的 kubeadm join 命令加入集群 【注意：join 需要加上 --cri-socket unix://var/run/cri-dockerd.sock】, 例如:
+1. 使用 k8s master 节点 init 完后的 kubeadm join 命令加入集群, 例如:
 ``` shell
 kubeadm join 192.168.1.xx:6443 --token abcded.1234567890abcdef \
-    --discovery-token-ca-cert-hash sha256:36kiuydcf921ff6dhg6y5471857bfe9b529f6datrey0825ae1add79e7aefd1c2 \
-    --cri-socket unix:///var/run/docker.sock
+    --discovery-token-ca-cert-hash sha256:36kiuydcf921ff6dhg6y5471857bfe9b529f6datrey0825ae1add79e7aefd1c2
 ```
 
 ### 安装配置 ingress-nginx 【根据自己需求看是否安装】

@@ -3,7 +3,6 @@
 .env
 .env.swp
 kubeadm-init.log
-kubeadm-config.yml
 calico.yaml
 metallb-configMap.yaml
 k8s-node-need-files.tgz

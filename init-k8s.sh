@@ -18,13 +18,8 @@ controlPlaneEndpoint=$CONTROL_PLANE_ENDPOINT
 k8sToken=$K8S_TOKEN
 
 echo "cp files"
-# cp kubeadm-config.yml.tpl kubeadm-config.yml
 cp calico.yaml.tpl calico.yaml
 
-# echo "set var to kubeadm-config.yml"
-# sed -i "s/<ADVERTISE_ADDRESS>/$apiserverAdvertiseAddress/g" kubeadm-config.yml
-# sed -i "s/<BIND_PORT>/$apiserverBindPort/g" kubeadm-config.yml
-# sed -i "s/<MY_HOSTNAME>/$MY_HOSTNAME/g" kubeadm-config.yml
 
 if [ "$IP_AUTODETECTION_METHOD_VALUE" != "" ]; then
     sed -i "s/<IP_AUTODETECTION_METHOD_VALUE>/$IP_AUTODETECTION_METHOD_VALUE/g" calico.yaml
@@ -39,38 +34,23 @@ bash image_download.sh
 
 echo "start kubeadm init"
 if [ "$controlPlaneEndpoint" != "" ]; then
-    # sed -i "s/<CONTROL_PLANE_ENDPOINT>/$controlPlaneEndpoint/g" kubeadm-config.yml
-
     if [ "$k8sToken" != "" ]; then
-        # sed -i "s/<K8S_TOKEN>/$k8sToken/g" kubeadm-config.yml
-        # sed -i "s/ttl: 24h0m0s/ttl: '0'/g" kubeadm-config.yml
-        echo "kubeadm init --kubernetes-version v1.21.5 --image-repository registry.aliyuncs.com/google_containers --apiserver-advertise-address=$apiserverAdvertiseAddress --apiserver-bind-port=$apiserverBindPort --pod-network-cidr=10.244.0.0/16 --service-cidr=10.1.0.0/16 --upload-certs --control-plane-endpoint=$controlPlaneEndpoint --token=$k8sToken --token-ttl=0 --cri-socket unix:///var/run/docker.sock | tee kubeadm-init.log"
-        kubeadm init --kubernetes-version v1.21.5 --image-repository registry.aliyuncs.com/google_containers --apiserver-advertise-address=$apiserverAdvertiseAddress --apiserver-bind-port=$apiserverBindPort --pod-network-cidr=10.244.0.0/16 --service-cidr=10.1.0.0/16 --upload-certs --control-plane-endpoint=$controlPlaneEndpoint --token=$k8sToken --token-ttl=0 --cri-socket unix:///var/run/docker.sock | tee kubeadm-init.log
+        echo "kubeadm init --kubernetes-version v1.21.5 --image-repository registry.aliyuncs.com/google_containers --apiserver-advertise-address=$apiserverAdvertiseAddress --apiserver-bind-port=$apiserverBindPort --pod-network-cidr=10.244.0.0/16 --service-cidr=10.1.0.0/16 --upload-certs --control-plane-endpoint=$controlPlaneEndpoint --token=$k8sToken --token-ttl=0 | tee kubeadm-init.log"
+        kubeadm init --kubernetes-version v1.21.5 --image-repository registry.aliyuncs.com/google_containers --apiserver-advertise-address=$apiserverAdvertiseAddress --apiserver-bind-port=$apiserverBindPort --pod-network-cidr=10.244.0.0/16 --service-cidr=10.1.0.0/16 --upload-certs --control-plane-endpoint=$controlPlaneEndpoint --token=$k8sToken --token-ttl=0 | tee kubeadm-init.log
     else
-        # sed -i "/指定token/d" kubeadm-config.yml
-        # sed -i "/<K8S_TOKEN>/d" kubeadm-config.yml
-        # sed -i "/ttl: 24h0m0s/d" kubeadm-config.yml
-        echo "kubeadm init --kubernetes-version v1.21.5 --image-repository registry.aliyuncs.com/google_containers --apiserver-advertise-address=$apiserverAdvertiseAddress --apiserver-bind-port=$apiserverBindPort --pod-network-cidr=10.244.0.0/16 --service-cidr=10.1.0.0/16 --upload-certs --control-plane-endpoint=$controlPlaneEndpoint --cri-socket unix:///var/run/docker.sock | tee kubeadm-init.log"
-        kubeadm init --kubernetes-version v1.21.5 --image-repository registry.aliyuncs.com/google_containers --apiserver-advertise-address=$apiserverAdvertiseAddress --apiserver-bind-port=$apiserverBindPort --pod-network-cidr=10.244.0.0/16 --service-cidr=10.1.0.0/16 --upload-certs --control-plane-endpoint=$controlPlaneEndpoint --cri-socket unix:///var/run/docker.sock | tee kubeadm-init.log
+        echo "kubeadm init --kubernetes-version v1.21.5 --image-repository registry.aliyuncs.com/google_containers --apiserver-advertise-address=$apiserverAdvertiseAddress --apiserver-bind-port=$apiserverBindPort --pod-network-cidr=10.244.0.0/16 --service-cidr=10.1.0.0/16 --upload-certs --control-plane-endpoint=$controlPlaneEndpoint | tee kubeadm-init.log"
+        kubeadm init --kubernetes-version v1.21.5 --image-repository registry.aliyuncs.com/google_containers --apiserver-advertise-address=$apiserverAdvertiseAddress --apiserver-bind-port=$apiserverBindPort --pod-network-cidr=10.244.0.0/16 --service-cidr=10.1.0.0/16 --upload-certs --control-plane-endpoint=$controlPlaneEndpoint | tee kubeadm-init.log
     fi
 else
-    sed -i "/<CONTROL_PLANE_ENDPOINT>/d" kubeadm-config.yml
-
     if [ "$k8sToken" != "" ]; then
-        # sed -i "s/<K8S_TOKEN>/$k8sToken/g" kubeadm-config.yml
-        # sed -i "s/ttl: 24h0m0s/ttl: '0'/g" kubeadm-config.yml
-        echo "kubeadm init --kubernetes-version v1.21.5 --image-repository registry.aliyuncs.com/google_containers --pod-network-cidr=10.244.0.0/16 --service-cidr=10.1.0.0/16 --apiserver-advertise-address=$apiserverAdvertiseAddress --apiserver-bind-port=$apiserverBindPort --upload-certs --token=$k8sToken --token-ttl=0 --cri-socket unix:///var/run/docker.sock | tee kubeadm-init.log"
-        kubeadm init --kubernetes-version v1.21.5 --image-repository registry.aliyuncs.com/google_containers --pod-network-cidr=10.244.0.0/16 --service-cidr=10.1.0.0/16 --apiserver-advertise-address=$apiserverAdvertiseAddress --apiserver-bind-port=$apiserverBindPort --upload-certs --token=$k8sToken --token-ttl=0 --cri-socket unix:///var/run/docker.sock | tee kubeadm-init.log
+        echo "kubeadm init --kubernetes-version v1.21.5 --image-repository registry.aliyuncs.com/google_containers --pod-network-cidr=10.244.0.0/16 --service-cidr=10.1.0.0/16 --apiserver-advertise-address=$apiserverAdvertiseAddress --apiserver-bind-port=$apiserverBindPort --upload-certs --token=$k8sToken --token-ttl=0 | tee kubeadm-init.log"
+        kubeadm init --kubernetes-version v1.21.5 --image-repository registry.aliyuncs.com/google_containers --pod-network-cidr=10.244.0.0/16 --service-cidr=10.1.0.0/16 --apiserver-advertise-address=$apiserverAdvertiseAddress --apiserver-bind-port=$apiserverBindPort --upload-certs --token=$k8sToken --token-ttl=0 | tee kubeadm-init.log
     else
-        # sed -i "/指定token/d" kubeadm-config.yml
-        # sed -i "/<K8S_TOKEN>/d" kubeadm-config.yml
-        # sed -i "/ttl: 24h0m0s/d" kubeadm-config.yml
-        echo "kubeadm init --kubernetes-version v1.21.5 --image-repository registry.aliyuncs.com/google_containers --pod-network-cidr=10.244.0.0/16 --service-cidr=10.1.0.0/16 --apiserver-advertise-address=$apiserverAdvertiseAddress --apiserver-bind-port=$apiserverBindPort --upload-certs --cri-socket unix:///var/run/docker.sock | tee kubeadm-init.log"
-        kubeadm init --kubernetes-version v1.21.5 --image-repository registry.aliyuncs.com/google_containers --pod-network-cidr=10.244.0.0/16 --service-cidr=10.1.0.0/16 --apiserver-advertise-address=$apiserverAdvertiseAddress --apiserver-bind-port=$apiserverBindPort --upload-certs --cri-socket unix:///var/run/docker.sock | tee kubeadm-init.log
+        echo "kubeadm init --kubernetes-version v1.21.5 --image-repository registry.aliyuncs.com/google_containers --pod-network-cidr=10.244.0.0/16 --service-cidr=10.1.0.0/16 --apiserver-advertise-address=$apiserverAdvertiseAddress --apiserver-bind-port=$apiserverBindPort --upload-certs | tee kubeadm-init.log"
+        kubeadm init --kubernetes-version v1.21.5 --image-repository registry.aliyuncs.com/google_containers --pod-network-cidr=10.244.0.0/16 --service-cidr=10.1.0.0/16 --apiserver-advertise-address=$apiserverAdvertiseAddress --apiserver-bind-port=$apiserverBindPort --upload-certs | tee kubeadm-init.log
     fi
 fi
 
-# kubeadm init --config=$PWD/kubeadm-config.yml --upload-certs | tee kubeadm-init.log
 
 CHECK_INIT_OK_STR=`grep "kubeadm join " kubeadm-init.log`
 if [ "$CHECK_INIT_OK_STR" != "" ]; then
@@ -78,7 +58,6 @@ if [ "$CHECK_INIT_OK_STR" != "" ]; then
     
     echo "add kubeadm join info to k8s-node-join-info"
     echo "`cat kubeadm-init.log | grep "kubeadm join" -A 2`\\" > k8s-node-join-info
-    echo "        --cri-socket unix:///var/run/docker.sock" >> k8s-node-join-info
     echo "k8s-node-join-info:"
     cat k8s-node-join-info
 

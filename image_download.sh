@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# kubeadm config images pull --config kubeadm-config.yml
-
 images_list='
 registry.aliyuncs.com/google_containers/kube-apiserver:v1.21.5
 registry.aliyuncs.com/google_containers/kube-controller-manager:v1.21.5
