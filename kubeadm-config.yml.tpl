@@ -1,4 +1,5 @@
-apiVersion: kubeadm.k8s.io/v1beta3
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: InitConfiguration
 bootstrapTokens:
 - groups:
   - system:bootstrappers:kubeadm:default-node-token
@@ -8,7 +9,6 @@ bootstrapTokens:
   usages:
   - signing
   - authentication
-kind: InitConfiguration
 localAPIEndpoint:
   # 修改为主节点IP地址
   advertiseAddress: <ADVERTISE_ADDRESS>
@@ -23,9 +23,14 @@ nodeRegistration:
   #- effect: NoSchedule
   #  key: node-role.kubernetes.io/control-plane
 ---
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+# 修改版本号 必须对应
+kubernetesVersion: 1.21.5
+# 换成国内的源
+imageRepository: registry.aliyuncs.com/google_containers
 apiServer:
   timeoutForControlPlane: 4m0s
-apiVersion: kubeadm.k8s.io/v1beta3
 certificatesDir: /etc/kubernetes/pki
 clusterName: kubernetes
 # 虚拟IP和haproxy端口
@@ -35,11 +40,6 @@ dns: {}
 etcd:
   local:
     dataDir: /var/lib/etcd
-# 换成国内的源
-imageRepository: registry.aliyuncs.com/google_containers
-kind: ClusterConfiguration
-# 修改版本号 必须对应
-kubernetesVersion: 1.21.5
 networking:
   # 新增该配置 固定为 10.244.0.0/16，用于后续 Calico网络插件
   podSubnet: 10.244.0.0/16
