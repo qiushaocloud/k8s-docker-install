@@ -218,7 +218,9 @@ echo 指定安装版本,K8S_VERSION: $K8S_VERSION
 yum update -y
 yum install -y kubelet-$K8S_VERSION kubeadm-$K8S_VERSION kubectl-$K8S_VERSION --disableexcludes=kubernetes --nogpgcheck
 
+systemctl enable kubelet.service
 systemctl daemon-reload && systemctl restart kubelet
+systemctl enable kubelet.service
 
 echo "===================== centos install k8s end ========================="
 
