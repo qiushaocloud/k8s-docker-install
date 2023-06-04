@@ -12,7 +12,7 @@ ubuntu/centos 安装 k8s 集群所需环境，k8s 使用 1.21.5, 容器使用 do
 
 
 ### 所有节点都需要安装 docker
-* 例如 ubuntu 的安装: apt install -y docker.io
+* 例如 ubuntu 的安装: `apt install -y docker.io`, ContOS 安装: `yum install -y docker`
 
 
 ### 配置 /etc/hosts, 需要根据您的实际情况配置, k8s-master、k8s-node01、k8s-node02、k8s-nodexx 您自行修改成您机器的 hostname 以及 ip 地址【k8s 所有节点(即: master 和 node)都需要配置】
